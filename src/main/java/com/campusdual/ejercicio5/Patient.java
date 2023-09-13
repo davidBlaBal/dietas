@@ -10,7 +10,7 @@ public class Patient {
     private int age;
     private String sex;
 
-    private HashMap<String , Diet> dietListWeek;
+    private HashMap<String , String> dietListWeek;
 
     public Patient(String name, String secondName, int weight, int height, int age, String sex) {
         this.name = name;
@@ -19,7 +19,7 @@ public class Patient {
         this.height = height;
         this.age = age;
         this.sex = sex;
-        dietListWeek = new HashMap<>();
+        this.dietListWeek = new HashMap<>();
     }
 
     public String getName() {
@@ -70,11 +70,11 @@ public class Patient {
         this.sex = sex;
     }
 
-    public HashMap<String, Diet> getDietListWeek() {
+    public HashMap<String, String> getDietListWeek() {
         return dietListWeek;
     }
 
-    public void setDietListWeek(HashMap<String, Diet> dietListWeek) {
+    public void setDietListWeek(HashMap<String, String> dietListWeek) {
         this.dietListWeek = dietListWeek;
     }
 }

@@ -18,6 +18,6 @@ package com.campusdual.ejercicio5;
 public class Menu {
     public static void main(String[] args) {
         DietProgram program = new DietProgram();
-        program.dietManagerMenu();
+        program.clinicMenu();
     }
 }

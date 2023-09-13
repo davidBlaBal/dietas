@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DietProgram {
 
-    private Diet diet=null;
+    //private Diet diet=null;
 
     private List<Food> foodList;
     private HashMap<String, Diet> dietList = new HashMap<>();
@@ -39,7 +39,31 @@ public class DietProgram {
         }while(notvalid);
         return option;
     }
-
+    public void clinicMenu(){
+        System.out.println("########################################################");
+        System.out.println("################# Nutricionista ###################");
+        System.out.println("########################################################");
+        Integer option;
+        do{
+            System.out.println("Escriba una opción:");
+            System.out.println("===================================");
+            System.out.println("1-Gestion de dietas");
+            System.out.println("2-Gestion de pacientes");
+            System.out.println("3-Salir del programa");
+            option = getOption(1,3);
+            switch (option){
+                case 1:
+                    dietManagerMenu();
+                    break;
+                case 2:
+                    patientManagerMenu();
+                    break;
+                case 3:
+                    System.out.println("Gracias por usar el programa, hasta pronto :)");
+                    break;
+            }
+        }while(option != 3);
+    }
     public void dietManagerMenu(){
         System.out.println("########################################################");
         System.out.println("################# Programa de dietas ###################");
@@ -89,7 +113,7 @@ public class DietProgram {
                     createPatient();
                     break;
                 case 2:
-                    showPatient();
+                    showPatientMenu();
                     break;
                 case 3:
                     addDietPatient();
@@ -140,20 +164,132 @@ public class DietProgram {
 
     }
 
-    private void showPatient() {
+    private void showPatientMenu() {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("Mostrar paciente");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        String option = null;
+        boolean salir = false;
+        do {
+            int i = 1;
+            for (String key : patientList.keySet()) {
+                System.out.println(i + " - " + key);
+            }
+            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
+
+            option = Kb.nextLine();
+            if ("s".equalsIgnoreCase(option)){
+                System.out.println("Saliendo...");
+                return;
+            }
+            if (patientList.containsKey(option)){
+                System.out.println("Se va a mostrar el paciente: " + option);
+                showPatient(option);
+                salir = true; // probar break
+            }else{
+                System.out.println("No se encuentra el paciente: " + option);
+            }
+        }while(!salir);
+    }
+
+    private void showPatient(String patientKey) {
+        Patient patient = patientList.get(patientKey);
+        System.out.println("Nombre: " + patient.getName());
+        System.out.println("Apellido: " + patient.getSecondName());
+        System.out.println("Peso: " + patient.getWeight());
+        System.out.println("Altura: " + patient.getHeight());
+        System.out.println("Edad: " + patient.getAge());
+        System.out.println("Sexo: " + patient.getSex());
+        System.out.println("Dietas:");
+
+        for(String key:patient.getDietListWeek().keySet()){
+            System.out.println(key + " " + patient.getDietListWeek().get(key));
+        }
     }
 
     private void addDietPatient() {
+        System.out.println("Agregar dieta a paciente:");
+        System.out.println("Seleccione un paciente:");
+        System.out.println("===================================");
+        String patientName = null;
+        boolean salir = false;
+        do {
+            int i = 1;
+            for (String key : patientList.keySet()) {
+                System.out.println(i + " - " + key);
+            }
+            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
+
+            patientName = Kb.nextLine();
+            if ("s".equalsIgnoreCase(patientName)){
+                System.out.println("Saliendo...");
+                return;
+            }
+            if (patientList.containsKey(patientName)){
+                System.out.println("Accediendo a: " + patientName);
+                salir = true; // probar break
+            }else{
+                System.out.println("No se encuentra el paciente: " + patientName);
+            }
+        }while(!salir);
+        String dietName = selectDiet();
+        String daySelected = selectDay();
+        if (daySelected != null){
+           Patient paciente = patientList.get(patientName);
+           paciente.getDietListWeek().put(daySelected,dietName);
+            System.out.println(patientName + " Dieta: " + dietName + " agregada al " + daySelected);
+        }else{
+            System.out.println("Saliendo ...");
+        }
+
+
     }
+    private String selectDay(){
+        System.out.println("Selecciona un dia de la semana:");
+        System.out.println("1-Lunes");
+        System.out.println("2-Martes");
+        System.out.println("3-Miercoles");
+        System.out.println("4-Jueves");
+        System.out.println("5-Viernes");
+        System.out.println("6-Sabado");
+        System.out.println("7-Domingo");
+        System.out.println("8-Salir");
+        int day = Kb.forceNextInt();
+        String dayLetter = null;
+        switch (day){
+            case 1:
+                dayLetter = "m";
+                break;
+            case 2:
+                dayLetter = "t";
+                break;
+            case 3:
+                dayLetter = "w";
+                break;
+            case 4:
+                dayLetter = "th";
+                break;
+            case 5:
+                dayLetter = "f";
+                break;
+            case 6:
+                dayLetter = "s";
+                break;
+            case 7:
+                dayLetter = "su";
+                break;
+            case 8:
+            return null;
+        }
+        return dayLetter;
+    }
+
 
     private void removePatient() {
         //TODO comprobar que no la tenga asignada un paciente
         System.out.println("Dar de baja paciente");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        System.out.println("Seleccione un paciente una opción:");
+        System.out.println("Seleccione un paciente:");
         System.out.println("===================================");
         String option = null;
         boolean salir = false;
@@ -171,7 +307,7 @@ public class DietProgram {
             }
             if (patientList.containsKey(option)){
                 System.out.println("Se va a borrar el paciente: " + option);
-                dietList.remove(option);
+                patientList.remove(option);
                 salir = true; // probar break
             }else{
                 System.out.println("No se encuentra el paciente: " + option);
@@ -211,9 +347,39 @@ public class DietProgram {
             }
         }while(!salir);
     }
+    private String selectDiet(){
+        String dietName = null;
+        boolean salir = false;
+        do {
 
-    private void addFoodMenu() {
-        if(this.diet==null){
+
+            int i = 1;
+            for (String key : dietList.keySet()) {
+                System.out.println(i + " - " + key);
+                i++;
+            }
+            System.out.println("Teclea el nombre de la dieta o s para salir");
+
+            dietName = Kb.nextLine();
+            if ("s".equalsIgnoreCase(dietName)){
+                System.out.println("Saliendo...");
+                break;
+            }
+            if (dietList.containsKey(dietName)){
+                System.out.println("Seleccionada: " + dietName);
+                return dietName;
+            }else{
+                System.out.println("No se encuentra la dieta: " + dietName);
+            }
+        }while(!salir);
+        return null;
+
+    }
+
+    private void addFoodMenu(String dietKey) {
+        //String dietKey = selectDiet();
+        Diet diet = dietList.get(dietKey);
+        if(diet==null){
             System.out.println("Para agregar alimentos hace falta iniciar una dieta");
             return;
         }
@@ -242,7 +408,7 @@ public class DietProgram {
                 System.out.println("Gramos:");
                 Integer grams = Kb.forceNextInt();
                 Food newFood = new Food(name,carbs,fats,proteins);
-                validateAndAddFoodToDiet(newFood,grams);
+                validateAndAddFoodToDiet(diet,newFood,grams);
                 foodList.add(newFood);
                 break;
             case 2:
@@ -267,14 +433,14 @@ public class DietProgram {
                 Food storedFood = foodList.get(element-1);
                 System.out.println("indique el número de gramos de "+storedFood.getName());
                 Integer foodGrams = Kb.forceNextInt();
-                validateAndAddFoodToDiet(storedFood,foodGrams);
+                validateAndAddFoodToDiet(diet,storedFood,foodGrams);
                 break;
         }
     }
 
-    private void validateAndAddFoodToDiet(Food food, Integer grams){
+    private void validateAndAddFoodToDiet(Diet diet, Food food, Integer grams){
         try{
-            this.diet.addFood(food,grams);
+            diet.addFood(food,grams);
         }catch (MaxCaloriesReachedException ecal){
             System.out.println("Se ha alcanzado el máximo valor de calorías permitido");
         }catch (MaxCarbsReachedException ecar){
@@ -350,13 +516,13 @@ public class DietProgram {
                 String sexCharacter = Kb.nextLine();
                 diet = new Diet("m".equalsIgnoreCase(sexCharacter),age,height,weight);
                 dietList.put(dietName,diet);
-                System.out.println("Se ha creado una dieta de "+this.diet.getMaxCalories()+" calorías máximas");
+                System.out.println("Se ha creado una dieta de "+ diet.getMaxCalories()+" calorías máximas");
                 break;
         }
     }
 
     private void showDietDetailsMenu() {
-        Diet diet = null;
+/*        Diet diet = null;
         Boolean close = false;
         do {
             int i = 1;
@@ -377,11 +543,13 @@ public class DietProgram {
             }else{
                 System.out.println("No se encuentra la dieta: " + option);
             }
-        }while(!close);
+        }while(!close);*/
+        String dietName = selectDiet();
+        Diet diet = dietList.get(dietName);
 
         if(diet!=null){
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            System.out.println("Detalles de la dieta");
+            System.out.println("Detalles de la dieta " + dietName );
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             if(diet.getMaxCalories()!=null){
                 System.out.println("El número máximo de calorías es:"+ diet.getMaxCalories());
@@ -395,10 +563,22 @@ public class DietProgram {
             System.out.println("Grasas:"+ diet.getTotalFats());
             System.out.println("Proteínas:"+ diet.getTotalProteins());
             System.out.println("Alimentos de la dieta:"+ diet.getDietIntakes());
+            System.out.println("Desea añadir alimentos? (Si = s / No = n");
+            String opcion = Kb.nextLine();
+            if ("s".equalsIgnoreCase(opcion)){
+                addFoodMenu(dietName);
+            }
+            if ("n".equalsIgnoreCase(opcion)){
+                System.out.println("Ok, saliendo...");
+            }else{
+                System.out.println("Lo mismo me da. Saliendo...");
+            }
         }else{
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             System.out.println("La dieta no esta iniciada");
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         }
     }
+
+
 }
