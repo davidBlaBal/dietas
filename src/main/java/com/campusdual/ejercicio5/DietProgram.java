@@ -16,6 +16,7 @@ public class DietProgram {
 
     private List<Food> foodList;
     private HashMap<String, Diet> dietList = new HashMap<>();
+    private HashMap<String, Patient> patientList = new HashMap<>();
 
     public DietProgram(){
         foodList = new ArrayList<>();
@@ -70,8 +71,115 @@ public class DietProgram {
     }
 
     public void patientManagerMenu(){
+        System.out.println("########################################################");
+        System.out.println("################ Gestión de pacientes ##################");
+        System.out.println("########################################################");
+        Integer option;
+        do{
+            System.out.println("Escriba una opción:");
+            System.out.println("===================================");
+            System.out.println("1-Dar de alta paciente");
+            System.out.println("2-Listar/Mostrar detalles pacientes");
+            System.out.println("3-Asignar dieta");
+            System.out.println("4-Dar de baja ");
+            System.out.println("5-Salir");
+            option = getOption(1,5);
+            switch (option){
+                case 1:
+                    createPatient();
+                    break;
+                case 2:
+                    showPatient();
+                    break;
+                case 3:
+                    addDietPatient();
+                    break;
+                case 4:
+                    removePatient();
+                    break;
+                case 5:
+                    System.out.println("Gracias por usar el programa, hasta pronto :)");
+                    break;
+            }
+        }while(option != 5);
+    }
+
+    private void createPatient() {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("Dar de alta paciente");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        boolean close = false;
+        String patientName, patientSecondName, patientKey;
+        do {
+            System.out.println("Introduzca el nombre del paciente:");
+            patientName = Kb.nextLine();
+            System.out.println("Introduzca el primer apellido:");
+            patientSecondName = Kb.nextLine();
+            patientKey = patientName + " " + patientSecondName;
+            if(patientName =="s" || patientSecondName == "s"){
+                System.out.println("Saliendo...");
+                return;
+            }
+            if (!patientList.containsKey(patientKey)){
+                close= true;
+            }else{
+                System.out.println("Ya existe un paciente con ese nombre y apellido. Cambiese el nombre :)");
+            }
+        }while (!close);
+        System.out.println("Introduzca el peso:");
+        int patientWeight = Kb.forceNextInt();
+        System.out.println("Introduzca la altura:");
+        int patientHeight = Kb.forceNextInt();
+        System.out.println("Introduzca edad:");
+        int patientAge = Kb.forceNextInt();
+        System.out.println("Introduzca sexo:(Hombre = h / Mujer = m");
+        String patientSex = Kb.nextLine();
+        Patient patient = new Patient(patientName,patientSecondName,patientWeight,patientHeight,patientAge,patientSex);
+        patientList.put(patientKey,patient);
+        System.out.println("Paciente "+ patientKey + " dado de alta.");
 
     }
+
+    private void showPatient() {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("Mostrar paciente");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    }
+
+    private void addDietPatient() {
+    }
+
+    private void removePatient() {
+        //TODO comprobar que no la tenga asignada un paciente
+        System.out.println("Dar de baja paciente");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("Seleccione un paciente una opción:");
+        System.out.println("===================================");
+        String option = null;
+        boolean salir = false;
+        do {
+            int i = 1;
+            for (String key : patientList.keySet()) {
+                System.out.println(i + " - " + key);
+            }
+            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
+
+            option = Kb.nextLine();
+            if ("s".equalsIgnoreCase(option)){
+                System.out.println("Saliendo...");
+                return;
+            }
+            if (patientList.containsKey(option)){
+                System.out.println("Se va a borrar el paciente: " + option);
+                dietList.remove(option);
+                salir = true; // probar break
+            }else{
+                System.out.println("No se encuentra el paciente: " + option);
+            }
+        }while(!salir);
+    }
+
+
     private void removeDiet() {
         //TODO comprobar que no la tenga asignada un paciente
         System.out.println("Eliminar dieta");

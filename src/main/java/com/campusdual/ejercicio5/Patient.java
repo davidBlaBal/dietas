@@ -2,24 +2,24 @@ package com.campusdual.ejercicio5;
 
 import java.util.HashMap;
 
-public class patient {
+public class Patient {
     private String name;
     private String secondName;
     private int weight;
     private int height;
     private int age;
-    private char sex;
+    private String sex;
 
     private HashMap<String , Diet> dietListWeek;
 
-    public patient(String name, String secondName, int weight, int height, int age, char sex, HashMap<String, Diet> dietListWeek) {
+    public Patient(String name, String secondName, int weight, int height, int age, String sex) {
         this.name = name;
         this.secondName = secondName;
         this.weight = weight;
         this.height = height;
         this.age = age;
         this.sex = sex;
-        this.dietListWeek = dietListWeek;
+        dietListWeek = new HashMap<>();
     }
 
     public String getName() {
@@ -62,11 +62,11 @@ public class patient {
         this.age = age;
     }
 
-    public char getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(char sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
