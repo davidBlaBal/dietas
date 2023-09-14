@@ -5,22 +5,17 @@ import com.campusdual.ejercicio5.exceptions.MaxCarbsReachedException;
 import com.campusdual.ejercicio5.exceptions.MaxFatsReachedException;
 import com.campusdual.ejercicio5.exceptions.MaxProteinsReachedException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.List;
+import java.util.*;
 
 public class DietProgram {
-
-    //private Diet diet=null;
-
     private List<Food> foodList;
-    private HashMap<String, Diet> dietList = new HashMap<>();
-    //private HashMap<String, Patient> patientList = new HashMap<>();
-    private List<Patient> patientList = new ArrayList<>();
+    private HashMap<String, Diet> dietList;
+    private List<Patient> patientList;
 
     public DietProgram(){
         foodList = new ArrayList<>();
+        dietList = new HashMap<>();
+        patientList = new ArrayList<>();
     }
 
     private Integer getOption(Integer min,Integer max){
@@ -140,24 +135,6 @@ public class DietProgram {
         String patientName = Kb.nextLine();
         System.out.println("Introduzca el primer apellido:");
         String patientSecondName = Kb.nextLine();
-/*        boolean close = false;
-        String patientName, patientSecondName, patientKey;
-        do {
-            System.out.println("Introduzca el nombre del paciente:");
-            patientName = Kb.nextLine();
-            System.out.println("Introduzca el primer apellido:");
-            patientSecondName = Kb.nextLine();
-            patientKey = patientName + " " + patientSecondName;
-            if(patientName =="s" || patientSecondName == "s"){
-                System.out.println("Saliendo...");
-                return;
-            }
-            if (!patientList.containsKey(patientKey)){
-                close= true;
-            }else{
-                System.out.println("Ya existe un paciente con ese nombre y apellido. Cambiese el nombre :)");
-            }
-        }while (!close);*/
         System.out.println("Introduzca el peso:");
         int patientWeight = Kb.forceNextInt();
         System.out.println("Introduzca la altura:");
@@ -169,37 +146,69 @@ public class DietProgram {
         Patient patient = new Patient(patientName,patientSecondName,patientWeight,patientHeight,patientAge,patientSex);
         patientList.add(patient);
         System.out.println("Paciente "+ patientName + " " + patientSecondName + " dado de alta.");
-
     }
 
     private void showPatientMenu() {
+        //TODO añadir modificar paciente (pendiente de probar)
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("@@@@@@@@ Mostrar paciente @@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         int selectedPatient = selectPatient();
         showPatient(selectedPatient);
-/*        String option = null;
-        boolean salir = false;
-        do {
-            int i = 1;
-            for (String key : patientList.keySet()) {
-                System.out.println(i + " - " + key);
-            }
-            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
+        //showPatient(selectPatient());
+        System.out.println("Desea modificar paciente? ( Si = s / No = n");
+        String option = Kb.nextLine();
+        if("s".equalsIgnoreCase(option)){
+            modifyPatient(selectedPatient);
+        }else System.out.println("Saliendo...");
 
-            option = Kb.nextLine();
-            if ("s".equalsIgnoreCase(option)){
+    }
+
+    private void modifyPatient(int patientIndex) {
+        System.out.println("Que atributo desea modificar?");
+        System.out.println("1-Nombre");
+        System.out.println("2-Apellido");
+        System.out.println("3-Peso");
+        System.out.println("4-Altura");
+        System.out.println("5-Edad");
+        System.out.println("6-Sexo");
+        System.out.println("7-Salir");
+        Integer option = getOption(1,7);
+        switch (option){
+            case 1:
+                System.out.println("introduce nuevo nombre:");
+                String newName = Kb.nextLine();
+                patientList.get(patientIndex).setName(newName);
+                break;
+            case 2:
+                System.out.println("introduce nuevo Apellido:");
+                String newSecondName = Kb.nextLine();
+                patientList.get(patientIndex).setSecondName(newSecondName);
+                break;
+            case 3:
+                System.out.println("introduce nuevo peso:");
+                int newWeight = Kb.forceNextInt();
+                patientList.get(patientIndex).setWeight(newWeight);
+                break;
+            case 4:
+                System.out.println("introduce nueva altura:");
+                int newHeight = Kb.forceNextInt();
+                patientList.get(patientIndex).setHeight(newHeight);
+                break;
+            case 5:
+                System.out.println("introduce nueva edad:");
+                int newAge = Kb.forceNextInt();
+                patientList.get(patientIndex).setAge(newAge);
+                break;
+            case 6:
+                System.out.println("introduce nuevo sexo: (Hombre = h / Mujer = m)");
+                String newSex = Kb.nextLine();
+                patientList.get(patientIndex).setSex(newSex);
+                break;
+            case 7:
                 System.out.println("Saliendo...");
                 return;
-            }
-            if (patientList.containsKey(option)){
-                System.out.println("Se va a mostrar el paciente: " + option);
-                showPatient(option);
-                salir = true; // probar break
-            }else{
-                System.out.println("No se encuentra el paciente: " + option);
-            }
-        }while(!salir);*/
+        }
     }
 
     private void showPatient(int patientKey) {
@@ -224,27 +233,6 @@ public class DietProgram {
         System.out.println("Seleccione un paciente:");
         System.out.println("===================================");
         int selectedPatient = selectPatient();
-
-/*        boolean salir = false;
-        do {
-            int i = 1;
-            for (String key : patientList.keySet()) {
-                System.out.println(i + " - " + key);
-            }
-            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
-
-            patientName = Kb.nextLine();
-            if ("s".equalsIgnoreCase(patientName)){
-                System.out.println("Saliendo...");
-                return;
-            }
-            if (patientList.containsKey(patientName)){
-                System.out.println("Accediendo a: " + patientName);
-                salir = true; // probar break
-            }else{
-                System.out.println("No se encuentra el paciente: " + patientName);
-            }
-        }while(!salir);*/
         String dietName = selectDiet();
         String daySelected = selectDay();
         if (daySelected != null){
@@ -253,10 +241,9 @@ public class DietProgram {
         }else{
             System.out.println("Saliendo ...");
         }
-
-
     }
     private String selectDay(){
+        //TODO solucionar esta maravilla
         System.out.println("Selecciona un dia de la semana:");
         System.out.println("1-Lunes");
         System.out.println("2-Martes");
@@ -296,7 +283,6 @@ public class DietProgram {
         return dayLetter;
     }
 
-
     private void removePatient() {
         System.out.println("Dar de baja paciente");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -307,31 +293,6 @@ public class DietProgram {
         }else{
             System.out.println("Operacion cancelada");
         }
-
-/*        System.out.println("Seleccione un paciente:");
-        System.out.println("===================================");
-        String option = null;
-        boolean salir = false;
-        do {
-            int i = 1;
-            for (String key : patientList.keySet()) {
-                System.out.println(i + " - " + key);
-            }
-            System.out.println("Teclea el nombre y apellido del paciente o s para salir");
-
-            option = Kb.nextLine();
-            if ("s".equalsIgnoreCase(option)){
-                System.out.println("Saliendo...");
-                return;
-            }
-            if (patientList.containsKey(option)){
-                System.out.println("Se va a borrar el paciente: " + option);
-                patientList.remove(option);
-                salir = true; // probar break
-            }else{
-                System.out.println("No se encuentra el paciente: " + option);
-            }
-        }while(!salir);*/
     }
 
     private int selectPatient(){
@@ -355,14 +316,14 @@ public class DietProgram {
 
         System.out.println("Eliminar dieta");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        String dietUsers = "";
+        StringBuilder dietUsers = new StringBuilder();
         boolean deleteConfirm = true;
         String selectedDiet = selectDiet();
         if(selectedDiet != null){
             for(Patient patient:patientList) {
                 if (patient.getDietListWeek().containsValue(selectedDiet)) {
                     deleteConfirm = false;
-                    dietUsers = dietUsers + patient.getName() + " ";
+                    dietUsers.append(patient.getName()).append(" / ");
                 }
             }
             if (deleteConfirm) {
@@ -371,31 +332,6 @@ public class DietProgram {
             } else System.out.println("No se pudo eliminar dieta. Esta siendo utilizada por: " + dietUsers);
         }
     }
-/*        String option = null;
-        boolean salir = false;
-        do {
-
-
-            int i = 1;
-            for (String key : dietList.keySet()) {
-                System.out.println(i + " - " + key);
-                i++;
-            }
-            System.out.println("Teclea el nombre de la dieta o s para salir");
-
-            option = Kb.nextLine();
-            if ("s".equalsIgnoreCase(option)){
-                System.out.println("Saliendo...");
-                break;
-            }
-            if (dietList.containsKey(option)){
-                System.out.println("Se va a borrar la dieta: " + option);
-                dietList.remove(option);
-                salir = true; // probar break
-            }else{
-                System.out.println("No se encuentra la dieta: " + option);
-            }
-        }while(!salir);*/
 
     private String selectDiet(){
 
@@ -417,7 +353,7 @@ public class DietProgram {
     }
 
     private void addFoodMenu(String dietKey) {
-        //String dietKey = selectDiet();
+
         Diet diet = dietList.get(dietKey);
         if(diet==null){
             System.out.println("Para agregar alimentos hace falta iniciar una dieta");
@@ -452,7 +388,7 @@ public class DietProgram {
                 foodList.add(newFood);
                 break;
             case 2:
-                if(foodList.size()==0){
+                if(foodList.isEmpty()){
                     System.out.println("Para agregar un alimento existente, tienen que existir alimentos previos");
                     return;
                 }
@@ -466,7 +402,7 @@ public class DietProgram {
                 }
                 System.out.println(i+"- Cancelar");
                 Integer element = getOption(1,i);
-                if(element==i){
+                if(Objects.equals(element, i)){
                     System.out.println("Cancelando alimento");
                     return;
                 }
@@ -495,13 +431,13 @@ public class DietProgram {
     }
 
     private void createDiet() {
+        //TODO agregar creacion automatica con datos de cliente
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("Crear dieta");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         String dietName = null;
         System.out.println("Introduce un nombre para la nueva dieta:");
         do{
-            //TODO validar si no se repite el nombre1
             dietName = Kb.nextLine();
             if (dietList.containsKey(dietName)){
                 System.out.println("El nombre de dieta ya existe");
@@ -566,28 +502,7 @@ public class DietProgram {
     }
 
     private void showDietDetailsMenu() {
-/*        Diet diet = null;
-        Boolean close = false;
-        do {
-            int i = 1;
-            for (String key : dietList.keySet()) {
-                System.out.println(i + " - " + key);
-            }
-            System.out.println("Teclea el nombre de la dieta que quieres ver o s para salir:");
-            String option = Kb.nextLine();
-            diet = dietList.get(option);
-            if ("s".equalsIgnoreCase(option)){
-                System.out.println("Saliendo...");
-                return;
-            }
-            if (dietList.containsKey(option)){
-                System.out.println("Se va a mostrar la dieta: " + option);
-                diet = dietList.get(option);
-                close = true; // probar break
-            }else{
-                System.out.println("No se encuentra la dieta: " + option);
-            }
-        }while(!close);*/
+
         String dietName = selectDiet();
         Diet diet = dietList.get(dietName);
 
