@@ -529,7 +529,7 @@ public class DietProgram {
         System.out.println("Dar de baja paciente");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         int selectedPatient = selectPatient();
-        if(selectedPatient>-1){
+        if(selectedPatient >= 0){
             System.out.println("Paciente " + patientList.get(selectedPatient).getName() + " " + patientList.get(selectedPatient).getSecondName() + " borrado");
             patientList.remove(selectedPatient);
         }else{
