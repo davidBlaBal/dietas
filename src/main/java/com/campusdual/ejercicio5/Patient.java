@@ -8,17 +8,17 @@ public class Patient {
     private int weight;
     private int height;
     private int age;
-    private String sex;
+    private Gender gender;
 
     private HashMap<String , String> dietListWeek;
 
-    public Patient(String name, String secondName, int weight, int height, int age, String sex) {
+    public Patient(String name, String secondName, int weight, int height, int age, String gender) {
         this.name = name;
         this.secondName = secondName;
         this.weight = weight;
         this.height = height;
         this.age = age;
-        this.sex = sex;
+        this.gender = Gender.getByString(gender);
         this.dietListWeek = new HashMap<>();
     }
 
@@ -62,12 +62,12 @@ public class Patient {
         this.age = age;
     }
 
-    public String getSex() {
-        return sex;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public HashMap<String, String> getDietListWeek() {

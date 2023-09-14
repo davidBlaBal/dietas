@@ -202,8 +202,8 @@ public class DietProgram {
                 break;
             case 6:
                 System.out.println("introduce nuevo sexo: (Hombre = h / Mujer = m)");
-                String newSex = Kb.nextLine();
-                patientList.get(patientIndex).setSex(newSex);
+                String newGender = Kb.nextLine();
+                patientList.get(patientIndex).setGender(Gender.getByString(newGender));
                 break;
             case 7:
                 System.out.println("Saliendo...");
@@ -218,7 +218,7 @@ public class DietProgram {
         System.out.println("Peso: " + patient.getWeight());
         System.out.println("Altura: " + patient.getHeight());
         System.out.println("Edad: " + patient.getAge());
-        System.out.println("Sexo: " + patient.getSex());
+        System.out.println("Sexo: " + (Gender.FEMALE.equals(patient.getGender()) ? "Mujer" : "Hombre"));
         System.out.println("Dietas:");
 
         for(String key:patient.getDietListWeek().keySet()){
@@ -233,14 +233,37 @@ public class DietProgram {
         System.out.println("Seleccione un paciente:");
         System.out.println("===================================");
         int selectedPatient = selectPatient();
-        String dietName = selectDiet();
-        String daySelected = selectDay();
-        if (daySelected != null){
-            patientList.get(selectedPatient).getDietListWeek().put(daySelected,dietName);
-            System.out.println(patientList.get(selectedPatient).getName() + " Dieta: " + dietName + " agregada al " + daySelected);
-        }else{
-            System.out.println("Saliendo ...");
+        System.out.println("Selecciona tipo de dieta:");
+        System.out.println("1-Elegir una de la lista");
+        System.out.println("2-Personalizada");
+        System.out.println("3-Cancelar");
+        int option = getOption(1,3);
+        String dietName = null;
+        switch (option){
+            case 1:
+                dietName = selectDiet();
+                break;
+            case 2:
+                Patient patient = patientList.get(selectedPatient);
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                System.out.println("Creando dieta");
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                Diet diet = new Diet(patient.getGender(),patient.getAge(),patient.getHeight(),patient.getWeight());
+                dietName = "Dieta para " + patient.getName() + " " + patient.getSecondName();
+                dietList.put(dietName,diet);
+                break;
+            case 3:
+                break;
         }
+        String daySelected = selectDay();
+        if (dietName!=null) {
+            if (daySelected != null) {
+                patientList.get(selectedPatient).getDietListWeek().put(daySelected, dietName);
+                System.out.println(patientList.get(selectedPatient).getName() + " Dieta: " + dietName + " agregada al " + daySelected);
+            } else {
+                System.out.println("Algo ha ido mal con el dia");
+            }
+        }else System.out.println("Algo ha ido mal con el nombre");
     }
     private String selectDay(){
         //TODO solucionar esta maravilla
@@ -431,7 +454,7 @@ public class DietProgram {
     }
 
     private void createDiet() {
-        //TODO agregar creacion automatica con datos de cliente
+        //TODO agregar creacion automatica con datos de cliente (probar)
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println("Crear dieta");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -451,7 +474,9 @@ public class DietProgram {
         System.out.println("2-Dieta por calorías");
         System.out.println("3-Dieta por macronutrientes");
         System.out.println("4-Dieta por datos personales");
-        Integer option = getOption(1,4);
+        System.out.println("5-Dieta por datos personales automatica");
+        System.out.println("6-Cancelar");
+        Integer option = getOption(1,6);
         Diet diet = null;
         switch (option){
             case 1:
@@ -494,9 +519,22 @@ public class DietProgram {
                 Integer age = Kb.forceNextInt();
                 System.out.println("Mujer u Hombre(m/h):");
                 String sexCharacter = Kb.nextLine();
-                diet = new Diet("m".equalsIgnoreCase(sexCharacter),age,height,weight);
+                diet = new Diet(Gender.getByString(sexCharacter),age,height,weight);
                 dietList.put(dietName,diet);
                 System.out.println("Se ha creado una dieta de "+ diet.getMaxCalories()+" calorías máximas");
+                break;
+            case 5:
+                int selectedPatient = selectPatient();
+                Patient patient = patientList.get(selectedPatient);
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                System.out.println("Creando dieta");
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                diet = new Diet(patient.getGender(),patient.getAge(),patient.getHeight(),patient.getWeight());
+                dietName = "Dieta para " + patient.getName() + " " + patient.getSecondName();
+                dietList.put(dietName,diet);
+                break;
+            case 6:
+                System.out.println("Cancelando...");
                 break;
         }
     }
