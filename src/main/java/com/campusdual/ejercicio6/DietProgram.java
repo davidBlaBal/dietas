@@ -1,26 +1,21 @@
-package com.campusdual.ejercicio5;
+package com.campusdual.ejercicio6;
 
-import com.campusdual.ejercicio5.exceptions.MaxCaloriesReachedException;
-import com.campusdual.ejercicio5.exceptions.MaxCarbsReachedException;
-import com.campusdual.ejercicio5.exceptions.MaxFatsReachedException;
-import com.campusdual.ejercicio5.exceptions.MaxProteinsReachedException;
+import com.campusdual.ejercicio6.exceptions.MaxCaloriesReachedException;
+import com.campusdual.ejercicio6.exceptions.MaxCarbsReachedException;
+import com.campusdual.ejercicio6.exceptions.MaxFatsReachedException;
+import com.campusdual.ejercicio6.exceptions.MaxProteinsReachedException;
 
-import java.io.*;
 import java.util.*;
 
 public class DietProgram {
     private List<Food> foodList;
     private HashMap<String, Diet> dietList;
     private List<Patient> patientList;
-    private File backupFile;
-
 
     public DietProgram(){
         foodList = new ArrayList<>();
         dietList = new HashMap<>();
         patientList = new ArrayList<>();
-        backupFile = new File ("src/main/java/com/campusdual/ejercicio6/backupFile.txt");
-
     }
 
     private Integer getOption(Integer min,Integer max){
@@ -46,7 +41,6 @@ public class DietProgram {
         System.out.println("################### Menú principal #####################");
         System.out.println("########################################################");
         Integer option;
-        readPatient();
         do{
             System.out.println("Escriba una opción:");
             System.out.println("===================================");
@@ -411,32 +405,7 @@ public class DietProgram {
         String patientSex = Kb.nextLine();
         Patient patient = new Patient(patientName,patientSecondName,patientWeight,patientHeight,patientAge,patientSex);
         patientList.add(patient);
-        updatePatients();
         System.out.println("Paciente "+ patientName + " " + patientSecondName + " dado de alta.");
-    }
-    private void updatePatients(){
-        try(PrintWriter pw = new PrintWriter(new FileWriter(backupFile))){
-            for(Patient patientFor :patientList){
-                pw.println(patientFor.toString());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("Error al escribir");
-        }
-    }
-    private void readPatient(){
-        String line;
-        try(BufferedReader br = new BufferedReader(new FileReader(backupFile))){
-            while((line = br.readLine()) != null) {
-                //System.out.println(line);
-                Patient patient = new Patient();
-                patientList.add(patient.parsePatient(line));
-            }
-        }catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void showPatientMenu() {
@@ -445,15 +414,12 @@ public class DietProgram {
         System.out.println("@@@@@@@@ Mostrar paciente @@@@@@@@@");
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         int selectedPatient = selectPatient();
-        if(selectedPatient != -1){
-            showPatient(selectedPatient);
-            System.out.println("Desea modificar paciente? ( Si = s / No = n");
-            String option = Kb.nextLine();
-            if("s".equalsIgnoreCase(option)){
-                modifyPatient(selectedPatient);
-            }
-        }
-        System.out.println("Saliendo...");
+        showPatient(selectedPatient);
+        System.out.println("Desea modificar paciente? ( Si = s / No = n");
+        String option = Kb.nextLine();
+        if("s".equalsIgnoreCase(option)){
+            modifyPatient(selectedPatient);
+        }else System.out.println("Saliendo...");
     }
 
     private void showPatient(int patientKey) {
@@ -520,7 +486,6 @@ public class DietProgram {
                 System.out.println("Saliendo...");
                 return;
         }
-        updatePatients();
     }
 
     private void addDietPatient() {
@@ -553,7 +518,6 @@ public class DietProgram {
             if (daySelected != null) {
 
                 patientList.get(selectedPatient).getDietListWeek().put(daySelected, dietName);
-                updatePatients();
                 System.out.println("Dieta con nombre: " + dietName + " -agregada al-" + daySelected);
             } else {
                 System.out.println("Algo ha ido mal con el dia");
@@ -568,7 +532,6 @@ public class DietProgram {
         if(selectedPatient >= 0){
             System.out.println("Paciente " + patientList.get(selectedPatient).getName() + " " + patientList.get(selectedPatient).getSecondName() + " borrado");
             patientList.remove(selectedPatient);
-            updatePatients();
         }else{
             System.out.println("Operacion cancelada");
         }

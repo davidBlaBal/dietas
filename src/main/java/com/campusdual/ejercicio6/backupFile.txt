@@ -1,0 +1,4 @@
+juanito;Paca;50;60;60;Hombre;Lunes:Juan Paca,Sabado:Juan Paca
+David+;man;40;40;40;Hombre;Sabado:David+ man
+prueba;pruebita;1;1;1;Hombre;Jueves:prueba pruebita
+full;full;2;2;2;Hombre;
